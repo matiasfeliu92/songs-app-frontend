@@ -1,5 +1,3 @@
-import { useState } from 'react'
-import './App.css'
 import { ShowSongs } from './components/ShowSongs'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 
