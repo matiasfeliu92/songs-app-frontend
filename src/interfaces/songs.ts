@@ -7,5 +7,5 @@ export default interface ISongs {
     duration: string;
     image: string;
     you_tube: string;
-    pub_date: string;
+    pub_date?: string;
 }
