@@ -24,7 +24,7 @@ export const ShowSongs = () => {
       <div className="container">
         <div className="row">
           <h1>Guarda y escucha tus canciones favoritas</h1>
-          <Link to="/save" className="btn btn-primary">
+          <Link to="/new-song" className="btn btn-primary">
             Ingresa tu cancion favorita
           </Link>
           <div className="col">
@@ -60,7 +60,7 @@ export const ShowSongs = () => {
                       <td>{song.genre}</td>
                       <td>{song.duration}</td>
                       <td>
-                        <a className="btn btn-primary" href={song.you_tube}>
+                        <a target="blank" className="btn btn-primary" href={song.you_tube}>
                           Link YouTube
                         </a>
                       </td>
