@@ -1,11 +1,8 @@
-import React from "react";
-
 type Props = {
   data?: string[];
-  text?: string;
 };
 
-export const FilterSongs = ({ data, text }: Props) => {
+export const FilterSongs = ({ data }: Props) => {
   console.log(data);
   return (
     <div>
