@@ -1,10 +1,17 @@
 import { useState, useEffect } from "react";
-import DataService from "../services/dataService";
 import { Link } from "react-router-dom";
+
+import DataService from "../services/dataService";
 import ISongs from "../interfaces/songs";
+import IArtists from "../interfaces/artists";
+import IGenres from "../interfaces/genres";
+import { FilterSongs } from "./FilterSongs";
 
 export const ShowSongs = () => {
   const [songsList, setSongsList] = useState<ISongs[]>([]);
+  const [artistsList, setArtistsList] = useState<string[]>([]);
+  const [genresList, setGenresList] = useState<string[]>([]);
+
   const service = new DataService();
 
   useEffect(() => {
@@ -16,12 +23,35 @@ export const ShowSongs = () => {
       .catch((err) => {
         console.log(err);
       });
+
+      service
+      .getAllArtists()
+      .then((res) => {
+        const artists = res.data.map((artist: IArtists) => artist.name);
+        setArtistsList(artists);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+    
+    service
+      .getAllGenres()
+      .then((res) => {
+        const genres = res.data.map((genre: IGenres) => genre.name);
+        setGenresList(genres);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   }, []);
 
   console.log(songsList);
+  console.log(artistsList)
+  console.log(genresList)
+
   return (
     <>
-      <div className="container">
+      <div className="container-fluid">
         <div className="row">
           <h1>Guarda y escucha tus canciones favoritas</h1>
           <Link to="/new-song" className="btn btn-primary">
@@ -33,9 +63,15 @@ export const ShowSongs = () => {
                 <tr>
                   <th>Imagen</th>
                   <th>Titulo</th>
-                  <th>Autor</th>
+                  <th>
+                    Autor
+                    <FilterSongs data={artistsList}/>
+                  </th>
                   <th>Album</th>
-                  <th>Genero</th>
+                  <th>
+                    Genero
+                    <FilterSongs data={genresList}/>
+                  </th>
                   <th>Duracion</th>
                   <th>YouTube</th>
                   <th>Acciones</th>
