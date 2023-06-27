@@ -18,12 +18,8 @@ const FilterSongs = ({
   genres,
   artists,
   text,
-  selectedArt,
-  selectedGen,
   setSelectedGenre,
   setSelectedArtist,
-  onSelectArtist,
-  onSelectGenre,
 }: Props) => {
   const handleSelectChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     if (text === "artists") {
