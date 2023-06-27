@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 
-import DataService from "../services/dataService";
 import ISongs from "../interfaces/songs";
 import IArtists from "../interfaces/artists";
 import IGenres from "../interfaces/genres";
