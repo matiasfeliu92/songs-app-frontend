@@ -25,8 +25,6 @@ export const ShowSongs = () => {
   console.log(selectedArtist)
   console.log(selectedGenre)
 
-  const service = new DataService();
-
   useEffect(() => {
     localStorage.setItem("songss", JSON.stringify(songss));
     const allSongs = localStorage.getItem("songss");
