@@ -1,125 +1,128 @@
 import { FormEventHandler, useState } from "react";
-import DataService from "../services/dataService";
 import { Link, useNavigate } from "react-router-dom";
-import { AxiosError, AxiosResponse } from "axios";
+import { db } from "../firebase/config"; // Import the db object from your firebase.js file
+import { collection, addDoc, doc, getDoc, setDoc } from "firebase/firestore";
 
 export const CreateSongs = () => {
-  const service = new DataService();
-  const [title, setTitle] = useState<string>("");
-  const [artist, setArtist] = useState<string>("");
-  const [album, setAlbum] = useState<string>("");
-  const [genre, setGenre] = useState<string>("");
-  const [duration, setDuration] = useState<string>("");
-  const [you_tube, setYou_tube] = useState<string>("");
-  const [image, setImage] = useState<string>("");
+  const [title, setTitle] = useState("");
+  const [artist, setArtist] = useState("");
+  const [album, setAlbum] = useState("");
+  const [genre, setGenre] = useState("");
+  const [duration, setDuration] = useState("");
+  const [youTube, setYouTube] = useState("");
+  const [image, setImage] = useState("");
   const navigate = useNavigate();
 
   const store: FormEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault();
 
-    const fields = [
-      { name: "title", value: title },
-      { name: "artist", value: artist },
-      { name: "album", value: album },
-      { name: "duration", value: duration },
-      { name: "genre", value: genre },
-      { name: "image", value: image },
-      { name: "you_tube", value: you_tube },
-    ];
-
-    const formData: Record<string, string> = {};
-
-    fields.forEach((field) => {
-      formData[field.name] = field.value;
-    });
-
-    console.log(formData)
-
-    await service.newSong(formData.title, formData.artist, formData.album, formData.duration, formData.genre, formData.image, formData.you_tube)
-    .then((res: AxiosResponse)=>{
-        console.log(res)
-      })
-      .catch((err:AxiosError) => {
-        console.log(err)
-      });
-      navigate("/");
+    const formData = {
+      title,
+      artist,
+      album,
+      genre,
+      duration,
+      youTube,
+      image,
     };
+
+    console.log(formData);
+
+    const artistDocRef = doc(db, "artists", artist);
+    const artistDoc = await getDoc(artistDocRef);
+
+    if (!artistDoc.exists()) {
+      // The artist does not exist, create a new document in "artists" collection
+      await setDoc(artistDocRef, {name: formData.artist});
+    }
+
+    const genreDocRef = doc(db, "genres", genre);
+    const genreDoc = await getDoc(genreDocRef);
+
+    if (!genreDoc.exists()) {
+      // The genre does not exist, create a new document in "genres" collection
+      await setDoc(genreDocRef, {name: formData.genre});
+    }
+
+    const songsCollectionRef = collection(db, "songs");
+    await addDoc(songsCollectionRef, formData);
+
+    navigate("/");
+  };
 
   return (
     <div className="container">
       <div className="row">
-        <h1>Ingresa tu cancion favorita</h1>
+        <h1>Ingresa tu canción favorita</h1>
         <Link to="/" className="btn btn-primary">
           Ir a la lista
         </Link>
         <form onSubmit={store}>
-          {/* <div className="container"> */}
-            <label className="form-label">Imagen</label>
-            <input
-              className="form-control"
-              value={image}
-              placeholder="ingresa la URL de la imagen"
-              onChange={(e) => setImage(e.target.value)}
-              type="url"
-              name="image"
-            />
-            <label className="form-label">Titulo</label>
-            <input
-              className="form-control"
-              value={title}
-              placeholder="ingresa el titulo"
-              onChange={(e) => setTitle(e.target.value)}
-              type="text"
-            />
-            <label className="form-label">Autor</label>
-            <input
-              className="form-control"
-              value={artist}
-              placeholder="ingresa el autor"
-              onChange={(e) => setArtist(e.target.value)}
-              type="text"
-              name="artist"
-            />
-            <label className="form-label">Album</label>
-            <input
-              className="form-control"
-              value={album}
-              placeholder="ingresa el album"
-              onChange={(e) => setAlbum(e.target.value)}
-              type="text"
-              name="album"
-            />
-            <label className="form-label">Genero</label>
-            <input
-              className="form-control"
-              value={genre}
-              placeholder="ingresa el genero musical"
-              onChange={(e) => setGenre(e.target.value)}
-              type="text"
-              name="genre"
-            />
-            <label className="form-label">Duracion</label>
-            <input
-              className="form-control"
-              value={duration}
-              placeholder="ingresa la duracion"
-              onChange={(e) => setDuration(e.target.value)}
-              type="text"
-              name="duration"
-            />
-            <label className="form-label">Link YouTube</label>
-            <input
-              className="form-control"
-              value={you_tube}
-              placeholder="ingresa la URL de YouTube"
-              onChange={(e) => setYou_tube(e.target.value)}
-              type="url"
-              name="you_tube"
-            />
-            <button type="submit" className="btn btn-primary">
-              Enviar
-            </button>
-          {/* </div> */}
+          <label className="form-label">Imagen</label>
+          <input
+            className="form-control"
+            value={image}
+            placeholder="Ingresa la URL de la imagen"
+            onChange={(e) => setImage(e.target.value)}
+            type="url"
+            name="image"
+          />
+          <label className="form-label">Título</label>
+          <input
+            className="form-control"
+            value={title}
+            placeholder="Ingresa el título"
+            onChange={(e) => setTitle(e.target.value)}
+            type="text"
+          />
+          <label className="form-label">Artista</label>
+          <input
+            className="form-control"
+            value={artist}
+            placeholder="Ingresa el artista"
+            onChange={(e) => setArtist(e.target.value)}
+            type="text"
+            name="artist"
+          />
+          <label className="form-label">Álbum</label>
+          <input
+            className="form-control"
+            value={album}
+            placeholder="Ingresa el álbum"
+            onChange={(e) => setAlbum(e.target.value)}
+            type="text"
+            name="album"
+          />
+          <label className="form-label">Género</label>
+          <input
+            className="form-control"
+            value={genre}
+            placeholder="Ingresa el género musical"
+            onChange={(e) => setGenre(e.target.value)}
+            type="text"
+            name="genre"
+          />
+          <label className="form-label">Duración</label>
+          <input
+            className="form-control"
+            value={duration}
+            placeholder="Ingresa la duración"
+            onChange={(e) => setDuration(e.target.value)}
+            type="text"
+            name="duration"
+          />
+          <label className="form-label">Enlace de YouTube</label>
+          <input
+            className="form-control"
+            value={youTube}
+            placeholder="Ingresa el enlace de YouTube"
+            onChange={(e) => setYouTube(e.target.value)}
+            type="url"
+            name="youTube"
+          />
+          <button type="submit" className="btn btn-primary">
+            Enviar
+          </button>
         </form>
       </div>
     </div>
