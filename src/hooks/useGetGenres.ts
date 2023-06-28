@@ -1,10 +1,13 @@
-import {useEffect, useState} from 'react'
+import {useEffect, useRef, useState} from 'react'
 import IGenres from '../interfaces/genres'
 import { collection, getDocs } from 'firebase/firestore'
 import { db } from '../firebase/config'
+import { useDispatch } from 'react-redux'
+import { getGenres } from '../actions'
 
-export const useGetGenres = () => {
-    const [genress, setGenress] = useState<IGenres[]>([])
+const useGetGenres = () => {
+    const dispatch = useDispatch()
+    const genresListRef = useRef<IGenres[]>([]);
 
     useEffect(()=>{
         const fetchGenres = async() => {
@@ -12,13 +15,16 @@ export const useGetGenres = () => {
                 const genresCollection = collection(db, "genres");
                 const genresSnaptshot = await getDocs(genresCollection);
                 const genresData: IGenres[] = genresSnaptshot.docs.map((doc) => doc.data() as IGenres);
-                setGenress(genresData);
+                genresListRef.current = genresData
+                dispatch(getGenres(genresData))
             } catch (error) {
-                console.error("Error fetching trabajos:", error);
+                console.error("Error fetching genres:", error);
             }
         }
         fetchGenres()
     }, [])
-    
-    return [genress]
+    console.log(genresListRef)
+    return genresListRef.current
 }
+
+export default useGetGenres

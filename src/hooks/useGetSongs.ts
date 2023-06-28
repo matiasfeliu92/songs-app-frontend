@@ -1,26 +1,31 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef } from "react";
+import { useDispatch } from "react-redux/es/exports";
+import { collection, getDocs } from "firebase/firestore";
 import ISongs from "../interfaces/songs";
 import { db } from "../firebase/config";
-import { collection, getDocs } from "firebase/firestore";
+import { getSongs } from "../actions";
 
 const useGetSongs = () => {
-    const [songss, setSongss] = useState<ISongs[]>([])
+  const dispatch = useDispatch();
+  const songsListRef = useRef<ISongs[]>([]);
 
-    useEffect(()=>{
-        const fetchSongs = async() => {
-            try {
-                const songsCollection = collection(db, "songs");
-                const songsSnaptshot = await getDocs(songsCollection);
-                const songsData: ISongs[] = songsSnaptshot.docs.map((doc) => doc.data() as ISongs);
-                setSongss(songsData);
-              } catch (error) {
-                console.error("Error fetching trabajos:", error);
-              }
-        }
-        fetchSongs()
-    }, [])
+  useEffect(() => {
+    const fetchSongs = async () => {
+      try {
+        const songsCollection = collection(db, "songs");
+        const songsSnapshot = await getDocs(songsCollection);
+        const songsData: ISongs[] = songsSnapshot.docs.map((doc) => doc.data() as ISongs);
+        songsListRef.current = songsData;
+        dispatch(getSongs(songsData));
+      } catch (error) {
+        console.error("Error fetching songs:", error);
+      }
+    };
 
-    return [songss]
-}
+    fetchSongs();
+  }, []);
+  console.log(songsListRef)
+  return songsListRef.current;
+};
 
-export default useGetSongs
+export default useGetSongs;

@@ -7,12 +7,12 @@ import IGenres from "../interfaces/genres";
 import FilterSongs from "./FilterSongs";
 import useGetSongs from "../hooks/useGetSongs";
 import useGetArtists from "../hooks/useGetArtists";
-import { useGetGenres } from "../hooks/useGetGenres";
+import useGetGenres  from "../hooks/useGetGenres";
 
 export const ShowSongs = () => {
-  const [songss] = useGetSongs();
-  const [artistss] = useGetArtists();
-  const [genress] = useGetGenres();
+  const songsListRef = useGetSongs();
+  const artistListRef = useGetArtists();
+  const genresListRef = useGetGenres();
 
   const [songsList, setSongsList] = useState<ISongs[]>([]);
   const [artistsList, setArtistsList] = useState<IArtists[]>([]);
@@ -24,28 +24,30 @@ export const ShowSongs = () => {
   console.log(selectedArtist)
   console.log(selectedGenre)
 
+  console.log(genresListRef)
+
   useEffect(() => {
-    localStorage.setItem("songss", JSON.stringify(songss));
+    localStorage.setItem("songss", JSON.stringify(songsListRef));
     const allSongs = localStorage.getItem("songss");
     if (allSongs !== null) {
       const parsedSongs: ISongs[] = JSON.parse(allSongs);
       setSongsList(parsedSongs);
     }
 
-    localStorage.setItem("artistss", JSON.stringify(artistss));
+    localStorage.setItem("artistss", JSON.stringify(artistListRef));
     const allArtists = localStorage.getItem("artistss");
     if (allArtists !== null) {
       const parsedArtists: IArtists[] = JSON.parse(allArtists);
       setArtistsList(parsedArtists);
     }
 
-    localStorage.setItem("genress", JSON.stringify(genress));
+    localStorage.setItem("genress", JSON.stringify(genresListRef));
     const allGenres = localStorage.getItem("genress");
     if (allGenres !== null) {
       const parsedGenres: IGenres[] = JSON.parse(allGenres);
       setGenresList(parsedGenres);
     }
-  }, [songss, artistss, genress]);
+  }, [songsListRef, artistListRef, genresListRef]);
 
   console.log(songsList);
   console.log(artistsList);
