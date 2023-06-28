@@ -99,7 +99,7 @@ export const ShowSongs = () => {
               <tbody>
                 {selectedArtist !== 'Todos' && selectedArtist !== '' ? (
                   filterArtSongs.map((song: ISongs) => (
-                    <tr key={song.id}>
+                    <tr key={song.title}>
                       <td>
                         <img
                           width={100}
@@ -118,14 +118,14 @@ export const ShowSongs = () => {
                         <a
                           target="blank"
                           className="btn btn-primary"
-                          href={song.you_tube}
+                          href={song.youTube}
                         >
                           Link YouTube
                         </a>
                       </td>
                       <td>
                         <Link
-                          to={`/actualizar/${song.id}`}
+                          to={`/actualizar/${song.title}`}
                           className="btn btn-info"
                         >
                           Editar
@@ -135,7 +135,7 @@ export const ShowSongs = () => {
                   ))
                 ) : selectedGenre !== 'Todos' && selectedGenre !== '' ? (
                   filterGenSongs.map((song: ISongs) => (
-                    <tr key={song.id}>
+                    <tr key={song.title}>
                       <td>
                         <img
                           width={100}
@@ -154,14 +154,14 @@ export const ShowSongs = () => {
                         <a
                           target="blank"
                           className="btn btn-primary"
-                          href={song.you_tube}
+                          href={song.youTube}
                         >
                           Link YouTube
                         </a>
                       </td>
                       <td>
                         <Link
-                          to={`/actualizar/${song.id}`}
+                          to={`/actualizar/${song.title}`}
                           className="btn btn-info"
                         >
                           Editar
@@ -171,7 +171,7 @@ export const ShowSongs = () => {
                   ))
                 ) : (
                   songsList.map((song: ISongs) => (
-                    <tr key={song.id}>
+                    <tr key={song.title}>
                       <td>
                         <img
                           width={100}
@@ -190,14 +190,14 @@ export const ShowSongs = () => {
                         <a
                           target="blank"
                           className="btn btn-primary"
-                          href={song.you_tube}
+                          href={song.youTube}
                         >
                           Link YouTube
                         </a>
                       </td>
                       <td>
                         <Link
-                          to={`/actualizar/${song.id}`}
+                          to={`/actualizar/${song.title}`}
                           className="btn btn-info"
                         >
                           Editar
